@@ -1,0 +1,13 @@
+---
+- name: Install system packages
+  apt:
+    name: "{{ edxapp_common_debian_pkgs }}"
+    state: present
+    update_cache: yes
+  register: install_pkgs
+  until: install_pkgs is success
+  retries: 10
+  delay: 5
+  tags:
+    - install
+    - install:base

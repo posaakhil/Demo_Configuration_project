@@ -1,0 +1,15 @@
+---
+#
+# edX Configuration
+#
+# github:     https://github.com/openedx/configuration
+# wiki:       https://github.com/openedx/configuration/wiki
+# code style: https://github.com/openedx/configuration/wiki/Ansible-Coding-Conventions
+# license:    https://github.com/openedx/configuration/blob/master/LICENSE.TXT
+#
+##
+# Role includes for role openstack
+#
+dependencies:
+  - role: vhost
+    VHOST_NAME: "{{ vhost_name }}"

@@ -1,0 +1,36 @@
+- name: Deploy edX Prospectus Service
+  hosts: all
+  become: True
+  gather_facts: True
+  vars:
+    ENABLE_DATADOG: False
+    ENABLE_NEWRELIC: False
+    CLUSTER_NAME: 'prospectus'
+    PROSPECTUS_DATA_DIR: "/edx/var/prospectus"
+    NGINX_OVERRIDE_DEFAULT_MAP_HASH_SIZE: True
+    NGINX_MAP_HASH_MAX_SIZE: 4096
+    NGINX_MAP_HASH_BUCKET_SIZE: 128
+    PROSPECTUS_ENABLED: True
+    PROSPECTUS_SANDBOX_BUILD: FALSE
+  roles:
+    - role: aws
+      when: COMMON_ENABLE_AWS_ROLE|bool and PROSPECTUS_ENABLE_PRE_BUILD|bool
+    - role: automated
+      AUTOMATED_USERS: "{{ PROSPECTUS_AUTOMATED_USERS | default({}) }}"
+      when: PROSPECTUS_ENABLE_PRE_BUILD|bool
+    - role: prospectus
+      when: PROSPECTUS_ENABLE_BUILD|bool
+    - role: nginx
+      when: PROSPECTUS_ENABLE_NGINX|bool
+      nginx_app_dir: "/etc/nginx"
+      nginx_sites:
+      - prospectus
+      nginx_default_sites:
+      - prospectus
+      PROSPECTUS_NGINX_PORT: 8000
+    - role: splunkforwarder
+      when: COMMON_ENABLE_SPLUNKFORWARDER|bool and PROSPECTUS_ENABLE_POST_BUILD|bool
+    - role: newrelic_infrastructure
+      when: COMMON_ENABLE_NEWRELIC_INFRASTRUCTURE|bool and PROSPECTUS_ENABLE_POST_BUILD|bool
+    - role: datadog
+      when: COMMON_ENABLE_DATADOG|bool and PROSPECTUS_ENABLE_POST_BUILD|bool

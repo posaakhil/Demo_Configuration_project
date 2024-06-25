@@ -1,0 +1,24 @@
+---
+#
+# edX Configuration
+#
+# github:     https://github.com/openedx/configuration
+# wiki:       https://github.com/openedx/configuration/wiki
+# code style: https://github.com/openedx/configuration/wiki/Ansible-Coding-Conventions
+# license:    https://github.com/openedx/configuration/blob/master/LICENSE.TXT
+#
+#
+# Vars for role automated
+#
+
+automated_role_name: automated
+AUTOMATED_USER: "changeme"
+automated_sudoers_template: "99-automated.j2"
+
+#
+# OS packages
+#
+
+automated_debian_pkgs: []
+
+automated_redhat_pkgs: []

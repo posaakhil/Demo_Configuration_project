@@ -1,0 +1,24 @@
+---
+#
+# datadog
+#
+# Overview:
+#
+# Installs datadog
+##
+# Dependencies:
+#
+# Example play:
+#   roles:
+#   - common
+#   - datadog
+#
+
+- name: Install Datadog role from Ansible Galaxy
+  ansible.builtin.command: ansible-galaxy install datadog.datadog
+  delegate_to: localhost
+  become: false
+
+- name: Install datadog Agent
+  include_role:
+    name: datadog.datadog

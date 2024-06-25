@@ -1,0 +1,5 @@
+---
+
+r7_installer_location: /tmp/rapid7_agent_installer.sh
+R7_TOKEN: "SET-ME-PLEASE"
+R7_BUCKET: "SET-ME-PLEASE (ex. bucket-name)" 

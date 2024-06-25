@@ -1,0 +1,92 @@
+- name: Configure instance(s)
+  hosts: all
+  become: True
+  gather_facts: True
+  serial: 10
+  vars:
+    migrate_db: "yes"
+  roles:
+    - role: aws
+      when: COMMON_ENABLE_AWS_ROLE
+    - role: nginx
+      nginx_sites:
+      - cms
+      - lms
+      - xqueue
+      - learner_portal
+      - program_console
+      - prospectus
+      - edx_exams
+      - subscriptions
+      nginx_default_sites:
+      - lms
+    - docker-tools
+    - mysql
+    - role: edxlocal
+      tags: edxlocal
+    - memcache
+    - role: mongo_5_0
+      when: MONGO_5_0_ENABLED
+    - role: mongo_6_0
+      when: MONGO_6_0_ENABLED
+    - role: mongo_7_0
+      when: MONGO_7_0_ENABLED
+    - role: redis
+    - { role: "edxapp", celery_worker: True, when: edxapp_containerized is defined and not edxapp_containerized }
+    - { role: "edxapp", when: edxapp_containerized is defined and not edxapp_containerized }
+    - { role: "testcourses", when: edxapp_containerized is defined and not edxapp_containerized }
+    - oraclejdk
+    - elasticsearch
+    - opensearch
+    - forum
+    - { role: "xqueue", update_users: True }
+    - edx_ansible
+    - analytics_api
+    - ecommerce
+    - credentials
+    - discovery
+    - role: registrar
+      when: REGISTRAR_ENABLED
+    - role: license_manager
+      when: LICENSE_MANAGER_ENABLED
+    - role: commerce_coordinator
+      when: COMMERCE_COORDINATOR_ENABLED
+    - role: enterprise_catalog
+      when: ENTERPRISE_CATALOG_ENABLED
+    - role: learner_portal
+      when: LEARNER_PORTAL_ENABLED
+    - role: program_console
+      when: PROGRAM_CONSOLE_ENABLED
+    - role: prospectus
+      when: PROSPECTUS_ENABLED
+    - role: authn
+      when: AUTHN_ENABLED
+    - role: payment
+      MFE_NAME: payment
+      when: PAYMENT_MFE_ENABLED
+    - role: mfe
+      MFE_NAME: learning
+      when: LEARNING_MFE_ENABLED
+    - role: course_authoring
+      MFE_NAME: course-authoring
+      when: COURSE_AUTHORING_MFE_ENABLED
+    - role: mfe
+      MFE_NAME: library-authoring
+      when: LIBRARY_AUTHORING_MFE_ENABLED
+    - role: mfe
+      MFE_NAME: ora-grading
+      when: ORA_GRADING_MFE_ENABLED
+    - role: mfe
+      MFE_NAME: profile
+      when: PROFILE_MFE_ENABLED
+    - role: mfe
+      MFE_NAME: learner-dashboard
+      when: LEARNER_DASHBOARD_MFE_ENABLED
+    - { role: oauth_client_setup, when: edxapp_containerized is defined and not edxapp_containerized }
+    - role: datadog
+      when: COMMON_ENABLE_DATADOG
+    - role: splunkforwarder
+      when: COMMON_ENABLE_SPLUNKFORWARDER
+    - role: datadog-uninstall
+      when: not COMMON_ENABLE_DATADOG
+    - flower

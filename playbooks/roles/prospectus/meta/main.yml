@@ -1,0 +1,5 @@
+---
+dependencies:
+  - role: common
+  - role: nginx
+    when: PROSPECTUS_ENABLE_NGINX|bool

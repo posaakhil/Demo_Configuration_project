@@ -1,0 +1,17 @@
+- name: Deploy learning MFE Frontend
+  hosts: all
+  become: True
+  gather_facts: True
+  vars:
+    ENABLE_NEWRELIC: False
+    CLUSTER_NAME: 'learning'
+    MYMFE_ENABLED: True
+    MYMFE_SANDBOX_BUILD: False
+  roles:
+    - role: mfe
+      MFE_NAME: learning
+      MFE_VERSION: '{{ LEARNING_MFE_VERSION }}'
+    - role: splunkforwarder
+      when: COMMON_ENABLE_SPLUNKFORWARDER
+    - role: newrelic_infrastructure
+      when: COMMON_ENABLE_NEWRELIC_INFRASTRUCTURE
